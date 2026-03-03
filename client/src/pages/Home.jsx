@@ -1,10 +1,13 @@
 import React from 'react';
+import ConnectionTest from '../components/ConnectionTest';
 
 const Home = () => {
     return (
         <div style={styles.container}>
             <h1>Welcome to TechBlog</h1>
             <p>Your one-stop destination for the latest in technology, programming, and software development.</p>
+
+            <ConnectionTest />
 
             <div style={styles.articleGrid}>
                 <article style={styles.card}>
