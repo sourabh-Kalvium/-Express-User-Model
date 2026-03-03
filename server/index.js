@@ -1,9 +1,17 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('MongoDB Connected successfully!'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 // Configure CORS
 const corsOptions = {
@@ -13,6 +21,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json()); // To parse JSON bodies if needed
+
+// Routes
+app.use('/api/users', userRoutes);
 
 // Test Endpoint for Frontend Connectivity
 app.get('/api/test', (req, res) => {
