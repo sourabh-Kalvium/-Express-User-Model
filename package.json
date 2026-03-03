@@ -1,0 +1,7 @@
+{
+  "name": "creators-platform",
+  "version": "1.0.0",
+  "scripts": {
+    "server": "npm run start --prefix server"
+  }
+}
