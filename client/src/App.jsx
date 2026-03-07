@@ -17,6 +17,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import CreatePost from './pages/CreatePost';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -43,6 +44,9 @@ function App() {
               {/* Protected Routes — redirect to login if not authenticated */}
               <Route path="/dashboard" element={
                 <ProtectedRoute><Dashboard /></ProtectedRoute>
+              } />
+              <Route path="/create-post" element={
+                <ProtectedRoute><CreatePost /></ProtectedRoute>
               } />
 
               <Route path="*" element={<NotFound />} />
