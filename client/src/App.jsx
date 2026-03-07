@@ -4,6 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Auth Context
 import { AuthProvider } from './context/AuthContext';
 
+// Route Guards
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
+
 // Layout Components
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -25,10 +29,22 @@ function App() {
 
           <main>
             <Routes>
+              {/* Public Routes — accessible by everyone */}
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+
+              {/* Public-only Routes — redirect to dashboard if already logged in */}
+              <Route path="/login" element={
+                <PublicRoute><Login /></PublicRoute>
+              } />
+              <Route path="/register" element={
+                <PublicRoute><Register /></PublicRoute>
+              } />
+
+              {/* Protected Routes — redirect to login if not authenticated */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute><Dashboard /></ProtectedRoute>
+              } />
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
@@ -41,3 +57,4 @@ function App() {
 }
 
 export default App;
+
