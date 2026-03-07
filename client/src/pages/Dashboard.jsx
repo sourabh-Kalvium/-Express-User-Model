@@ -1,6 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        // 1. Check for token
+        const token = localStorage.getItem('token');
+        const userData = localStorage.getItem('user');
+
+        if (!token || !userData) {
+            // Not logged in -> redirect to login
+            navigate('/login');
+            return;
+        }
+
+        // 2. Set user data
+        setUser(JSON.parse(userData));
+    }, [navigate]);
+
+    if (!user) {
+        return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading dashboard...</div>;
+    }
+
     return (
         <div style={styles.container}>
             <div style={styles.sidebar}>
@@ -8,11 +31,22 @@ const Dashboard = () => {
                     <li style={styles.navItemActive}>My Profile</li>
                     <li style={styles.navItem}>My Articles</li>
                     <li style={styles.navItem}>Settings</li>
-                    <li style={styles.navItem}>Logout</li>
+                    <li
+                        style={{ ...styles.navItem, color: 'red' }}
+                        onClick={() => {
+                            localStorage.removeItem('token');
+                            localStorage.removeItem('user');
+                            navigate('/login');
+                        }}
+                    >
+                        Logout
+                    </li>
                 </ul>
             </div>
             <div style={styles.mainContent}>
-                <h2>Dashboard Overview</h2>
+                <h2>Welcome back, {user.name}!</h2>
+                <p style={{ color: '#666', marginBottom: '2rem' }}>Email: {user.email}</p>
+
                 <div style={styles.statsGrid}>
                     <div style={styles.statCard}>
                         <h3>Total Views</h3>
