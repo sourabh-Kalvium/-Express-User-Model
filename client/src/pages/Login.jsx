@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -7,7 +8,8 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate();
+    // Get login function from AuthContext — no direct localStorage or navigate needed here
+    const { login } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -24,9 +26,7 @@ const Login = () => {
         try {
             const res = await fetch('/api/users/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
@@ -36,12 +36,8 @@ const Login = () => {
                 throw new Error(data.message || 'Login failed');
             }
 
-            // Success - Store token and user data
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.data));
-
-            // Redirect to dashboard
-            navigate('/dashboard');
+            // Delegate token/user storage and redirect to AuthContext
+            login(data.data, data.token);
 
         } catch (err) {
             setError(err.message);
@@ -117,9 +113,7 @@ const styles = {
         flexDirection: 'column',
         gap: '0.5rem',
     },
-    label: {
-        fontWeight: 'bold',
-    },
+    label: { fontWeight: 'bold' },
     input: {
         padding: '0.75rem',
         borderRadius: '4px',
@@ -135,6 +129,14 @@ const styles = {
         fontSize: '1rem',
         cursor: 'pointer',
         fontWeight: 'bold',
+    },
+    errorAlert: {
+        padding: '0.75rem 1rem',
+        backgroundColor: '#f8d7da',
+        color: '#721c24',
+        borderRadius: '4px',
+        border: '1px solid #f5c6cb',
+        marginTop: '1rem',
     },
     helperText: {
         marginTop: '1.5rem',

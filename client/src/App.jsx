@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+// Auth Context
+import { AuthProvider } from './context/AuthContext';
+
 // Layout Components
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -15,21 +18,24 @@ import NotFound from './pages/NotFound';
 function App() {
   return (
     <Router>
-      <div className="app-container" style={{ minHeight: '100vh', position: 'relative' }}>
-        <Header />
+      {/* AuthProvider is inside Router so it can use useNavigate */}
+      <AuthProvider>
+        <div className="app-container" style={{ minHeight: '100vh', position: 'relative' }}>
+          <Header />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
 
-        <Footer />
-      </div>
+          <Footer />
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

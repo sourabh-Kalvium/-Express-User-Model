@@ -1,16 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user'));
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
+  // Get auth state and logout from context — no direct localStorage access
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <header style={styles.header}>
@@ -21,11 +15,19 @@ const Header = () => {
         <ul style={styles.navList}>
           <li style={styles.navItem}><Link to="/" style={styles.link}>Home</Link></li>
 
-          {token ? (
+          {isAuthenticated() ? (
             <>
-              <li style={styles.navItem}><Link to="/dashboard" style={styles.link}>Dashboard</Link></li>
-              <li style={styles.navItem}><span style={{ color: '#aaa', marginRight: '1rem' }}>Hi, {user?.name?.split(' ')[0]}</span></li>
-              <li style={styles.navItem}><button onClick={handleLogout} style={styles.logoutBtn}>Logout</button></li>
+              <li style={styles.navItem}>
+                <Link to="/dashboard" style={styles.link}>Dashboard</Link>
+              </li>
+              <li style={styles.navItem}>
+                <span style={{ color: '#aaa', marginRight: '1rem' }}>
+                  Hi, {user?.name?.split(' ')[0]}
+                </span>
+              </li>
+              <li style={styles.navItem}>
+                <button onClick={logout} style={styles.logoutBtn}>Logout</button>
+              </li>
             </>
           ) : (
             <>
@@ -33,7 +35,6 @@ const Header = () => {
               <li style={styles.navItem}><Link to="/register" style={styles.link}>Register</Link></li>
             </>
           )}
-
         </ul>
       </nav>
     </header>
@@ -56,15 +57,23 @@ const styles = {
   navList: {
     listStyleType: 'none',
     display: 'flex',
+    alignItems: 'center',
     margin: 0,
     padding: 0,
   },
-  navItem: {
-    marginLeft: '1.5rem',
-  },
+  navItem: { marginLeft: '1.5rem' },
   link: {
     color: 'white',
     textDecoration: 'none',
+  },
+  logoutBtn: {
+    background: 'transparent',
+    border: '1px solid #aaa',
+    color: 'white',
+    padding: '0.3rem 0.8rem',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
   }
 };
 
