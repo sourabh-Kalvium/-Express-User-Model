@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+    // Get user, loading status, and logout function from context
+    const { user, loading, isAuthenticated, logout } = useAuth();
 
     useEffect(() => {
-        // 1. Check for token
-        const token = localStorage.getItem('token');
-        const userData = localStorage.getItem('user');
-
-        if (!token || !userData) {
-            // Not logged in -> redirect to login
+        // Wait until the initial auth check is complete
+        if (!loading && !isAuthenticated()) {
             navigate('/login');
-            return;
         }
+    }, [loading, isAuthenticated, navigate]);
 
-        // 2. Set user data
-        setUser(JSON.parse(userData));
-    }, [navigate]);
+    if (loading) {
+        return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
+    }
 
     if (!user) {
-        return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading dashboard...</div>;
+        return null; // Redirecting, render nothing
     }
 
     return (
@@ -32,12 +30,8 @@ const Dashboard = () => {
                     <li style={styles.navItem}>My Articles</li>
                     <li style={styles.navItem}>Settings</li>
                     <li
-                        style={{ ...styles.navItem, color: 'red' }}
-                        onClick={() => {
-                            localStorage.removeItem('token');
-                            localStorage.removeItem('user');
-                            navigate('/login');
-                        }}
+                        style={{ ...styles.navItem, color: 'red', cursor: 'pointer' }}
+                        onClick={logout}
                     >
                         Logout
                     </li>
@@ -101,7 +95,6 @@ const styles = {
         padding: '0.75rem 1rem',
         borderRadius: '4px',
         cursor: 'pointer',
-        transition: 'background-color 0.2s',
     },
     navItemActive: {
         padding: '0.75rem 1rem',
@@ -111,9 +104,7 @@ const styles = {
         color: 'white',
         fontWeight: 'bold',
     },
-    mainContent: {
-        flex: 1,
-    },
+    mainContent: { flex: 1 },
     statsGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
