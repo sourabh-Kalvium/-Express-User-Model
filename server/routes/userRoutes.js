@@ -13,4 +13,15 @@ router.delete('/:id', userController.deleteUser);
 // @access  Public
 router.post('/login', loginUser);
 
+// @route   GET /api/users/me
+// @desc    Get the currently authenticated user's profile
+// @access  Protected — requires valid JWT
+router.get('/me', protect, (req, res) => {
+    res.status(200).json({
+        success: true,
+        data: req.user
+    });
+});
+
 module.exports = router;
+

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,14 +9,13 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Get login function from AuthContext — no direct localStorage or navigate needed here
+    // Get login function from AuthContext
     const { login } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
 
-        // Basic validation
         if (!email || !password) {
             setError('Please enter both email and password.');
             return;
@@ -24,23 +24,17 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const res = await fetch('/api/users/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
+            // Use centralized Axios API — no manual headers or fetch needed
+            const response = await api.post('/users/login', { email, password });
 
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.message || 'Login failed');
-            }
+            const { token, data } = response.data;
 
             // Delegate token/user storage and redirect to AuthContext
-            login(data.data, data.token);
+            login(data, token);
 
         } catch (err) {
-            setError(err.message);
+            // Axios wraps API errors in err.response
+            setError(err.response?.data?.message || err.message || 'Login failed');
         } finally {
             setLoading(false);
         }
