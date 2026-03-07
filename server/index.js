@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/userRoutes');
+const postRoutes = require('./routes/postRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,10 +21,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json()); // To parse JSON bodies if needed
+app.use(express.json());
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
 
 // Test Endpoint for Frontend Connectivity
 app.get('/api/test', (req, res) => {
