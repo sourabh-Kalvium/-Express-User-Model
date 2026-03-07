@@ -1,26 +1,30 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 
 const Dashboard = () => {
-    const navigate = useNavigate();
-    // Get user, loading status, and logout function from context
-    const { user, loading, isAuthenticated, logout } = useAuth();
+    // ProtectedRoute handles redirection if not authenticated
+    // All we need here is user data and logout from context
+    const { user, loading, logout } = useAuth();
+    const [profile, setProfile] = useState(null);
+    const [fetchError, setFetchError] = useState('');
 
     useEffect(() => {
-        // Wait until the initial auth check is complete
-        if (!loading && !isAuthenticated()) {
-            navigate('/login');
+        if (!loading && user) {
+            // Demonstrate an authenticated Axios API call — interceptor attaches JWT automatically
+            api.get('/users/me')
+                .then(res => setProfile(res.data.data))
+                .catch(err => {
+                    setFetchError(err.response?.data?.message || 'Failed to fetch profile');
+                });
         }
-    }, [loading, isAuthenticated, navigate]);
+    }, [loading, user]);
 
     if (loading) {
         return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
     }
 
-    if (!user) {
-        return null; // Redirecting, render nothing
-    }
+    if (!user) return null;
 
     return (
         <div style={styles.container}>
@@ -39,7 +43,19 @@ const Dashboard = () => {
             </div>
             <div style={styles.mainContent}>
                 <h2>Welcome back, {user.name}!</h2>
-                <p style={{ color: '#666', marginBottom: '2rem' }}>Email: {user.email}</p>
+                <p style={{ color: '#666', marginBottom: '0.5rem' }}>Email: {user.email}</p>
+
+                {/* Show live data fetched from the protected /me endpoint */}
+                {fetchError && (
+                    <p style={{ color: 'red', fontSize: '0.9rem' }}>⚠️ {fetchError}</p>
+                )}
+                {profile && (
+                    <div style={styles.profileBadge}>
+                        ✅ Profile verified via protected <code>/api/users/me</code> endpoint
+                        <br />
+                        <small>Account created: {new Date(profile.createdAt).toLocaleDateString()}</small>
+                    </div>
+                )}
 
                 <div style={styles.statsGrid}>
                     <div style={styles.statCard}>
@@ -85,17 +101,12 @@ const styles = {
     },
     navList: {
         listStyleType: 'none',
-        padding: 0,
-        margin: 0,
+        padding: 0, margin: 0,
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
     },
-    navItem: {
-        padding: '0.75rem 1rem',
-        borderRadius: '4px',
-        cursor: 'pointer',
-    },
+    navItem: { padding: '0.75rem 1rem', borderRadius: '4px', cursor: 'pointer' },
     navItemActive: {
         padding: '0.75rem 1rem',
         borderRadius: '4px',
@@ -105,6 +116,15 @@ const styles = {
         fontWeight: 'bold',
     },
     mainContent: { flex: 1 },
+    profileBadge: {
+        backgroundColor: '#d4edda',
+        border: '1px solid #c3e6cb',
+        color: '#155724',
+        padding: '0.75rem 1rem',
+        borderRadius: '6px',
+        marginBottom: '1.5rem',
+        fontSize: '0.9rem',
+    },
     statsGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -125,19 +145,9 @@ const styles = {
         color: '#007bff',
         margin: '0.5rem 0 0 0',
     },
-    recentActivity: {
-        borderTop: '1px solid #eee',
-        paddingTop: '1.5rem',
-    },
-    activityList: {
-        listStyleType: 'circle',
-        paddingLeft: '1.5rem',
-        marginTop: '1rem',
-    },
-    activityItem: {
-        marginBottom: '0.75rem',
-        color: '#555',
-    }
+    recentActivity: { borderTop: '1px solid #eee', paddingTop: '1.5rem' },
+    activityList: { listStyleType: 'circle', paddingLeft: '1.5rem', marginTop: '1rem' },
+    activityItem: { marginBottom: '0.75rem', color: '#555' }
 };
 
 export default Dashboard;
