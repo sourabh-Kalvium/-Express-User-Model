@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import api from '../services/api';
 
 const CreatePost = () => {
@@ -27,13 +27,16 @@ const CreatePost = () => {
             await api.post('/posts', { title, content, tags });
 
             setSuccess('Post created successfully! Redirecting to dashboard...');
+            toast.success('Post created successfully!');
             setTitle('');
             setContent('');
             setTags('');
             setTimeout(() => navigate('/dashboard'), 1500);
 
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to create post');
+            const msg = err.response?.data?.message || 'Failed to create post';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
