@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
@@ -34,7 +35,9 @@ const Login = () => {
 
         } catch (err) {
             // Axios wraps API errors in err.response
-            setError(err.response?.data?.message || err.message || 'Login failed');
+            const msg = err.response?.data?.message || err.message || 'Login failed';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }

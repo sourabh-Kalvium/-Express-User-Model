@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import api from '../services/api';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -85,39 +87,27 @@ const Register = () => {
         setIsLoading(true);
 
         try {
-            // Send Registration data to the backend via Vite Proxy
-            const response = await fetch('/api/users/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                // We do not send `confirmPassword` to the backend
-                body: JSON.stringify({
-                    name: formData.name.trim(),
-                    email: formData.email.trim().toLowerCase(),
-                    password: formData.password
-                })
+            const response = await api.post('/users/register', {
+                name: formData.name.trim(),
+                email: formData.email.trim().toLowerCase(),
+                password: formData.password
             });
 
-            const data = await response.json();
+            // Registration successful
+            setSuccessMessage('Account created successfully! Redirecting...');
+            toast.success('Account created successfully!');
+            setFormData({ name: '', email: '', password: '', confirmPassword: '' });
 
-            if (response.ok) {
-                // Registration successful
-                setSuccessMessage('Account created successfully! Redirecting...');
-                setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+            // Redirect to login after 2 seconds
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
 
-                // Redirect to login after 2 seconds
-                setTimeout(() => {
-                    navigate('/login');
-                }, 2000);
-            } else {
-                // Backend returned an error (e.g., email already exists)
-                setApiError(data.message || 'Registration failed');
-            }
         } catch (err) {
-            // Network error or server is down
-            console.error(err);
-            setApiError('Unable to connect to server. Please try again later.');
+            // Axios error or network error
+            const msg = err.response?.data?.message || err.message || 'Registration failed';
+            setApiError(msg);
+            toast.error(msg);
         } finally {
             setIsLoading(false);
         }

@@ -3,7 +3,7 @@ const Post = require('../models/Post');
 // @desc    Create a new post
 // @route   POST /api/posts
 // @access  Protected
-const createPost = async (req, res) => {
+const createPost = async (req, res, next) => {
     try {
         const { title, content, tags } = req.body;
 
@@ -21,18 +21,14 @@ const createPost = async (req, res) => {
         res.status(201).json({ success: true, data: post });
 
     } catch (error) {
-        if (error.name === 'ValidationError') {
-            const messages = Object.values(error.errors).map(e => e.message);
-            return res.status(400).json({ success: false, message: messages.join(', ') });
-        }
-        res.status(500).json({ success: false, message: 'Server error' });
+        next(error);
     }
 };
 
 // @desc    Get paginated posts for the logged-in user
 // @route   GET /api/posts?page=1&limit=5
 // @access  Protected
-const getPosts = async (req, res) => {
+const getPosts = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
@@ -62,14 +58,14 @@ const getPosts = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        next(error);
     }
 };
 
 // @desc    Get a single post by ID
 // @route   GET /api/posts/:id
 // @access  Protected
-const getPostById = async (req, res) => {
+const getPostById = async (req, res, next) => {
     try {
         const post = await Post.findById(req.params.id).populate('author', 'name email');
 
@@ -80,14 +76,14 @@ const getPostById = async (req, res) => {
         res.status(200).json({ success: true, data: post });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        next(error);
     }
 };
 
 // @desc    Update a post
 // @route   PUT /api/posts/:id
 // @access  Protected (owner only)
-const updatePost = async (req, res) => {
+const updatePost = async (req, res, next) => {
     try {
         const post = await Post.findById(req.params.id);
 
@@ -115,18 +111,14 @@ const updatePost = async (req, res) => {
         res.status(200).json({ success: true, data: updatedPost });
 
     } catch (error) {
-        if (error.name === 'ValidationError') {
-            const messages = Object.values(error.errors).map(e => e.message);
-            return res.status(400).json({ success: false, message: messages.join(', ') });
-        }
-        res.status(500).json({ success: false, message: 'Server error' });
+        next(error);
     }
 };
 
 // @desc    Delete a post
 // @route   DELETE /api/posts/:id
 // @access  Protected (owner only)
-const deletePost = async (req, res) => {
+const deletePost = async (req, res, next) => {
     try {
         const post = await Post.findById(req.params.id);
 
@@ -144,7 +136,7 @@ const deletePost = async (req, res) => {
         res.status(200).json({ success: true, message: 'Post deleted successfully' });
 
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        next(error);
     }
 };
 

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
+const errorMiddleware = require('./middleware/errorMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,9 @@ app.use(express.json());
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
+
+// Error Middleware
+app.use(errorMiddleware);
 
 // Test Endpoint for Frontend Connectivity
 app.get('/api/test', (req, res) => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
@@ -23,7 +24,9 @@ const Dashboard = () => {
             setPosts(res.data.data);
             setPagination(res.data.pagination);
         } catch (err) {
-            setPostsError(err.response?.data?.message || 'Failed to load posts');
+            const msg = err.response?.data?.message || 'Failed to load posts';
+            setPostsError(msg);
+            toast.error(msg);
         } finally {
             setPostsLoading(false);
         }
@@ -38,10 +41,12 @@ const Dashboard = () => {
 
         try {
             await api.delete(`/posts/${postId}`);
+            toast.success('Post deleted successfully');
         } catch (err) {
             // Rollback on error
             setPosts(previousPosts);
-            alert(err.response?.data?.message || 'Failed to delete post');
+            const msg = err.response?.data?.message || 'Failed to delete post';
+            toast.error(msg);
         }
     };
 

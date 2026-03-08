@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import api from '../services/api';
 
 const EditPost = () => {
@@ -29,13 +30,14 @@ const EditPost = () => {
                 setContent(post.content);
                 setTags(post.tags.join(', '));
             } catch (err) {
+                let msg = 'Failed to load post. Please try again.';
                 if (err.response?.status === 404) {
-                    setFetchError('Post not found.');
+                    msg = 'Post not found.';
                 } else if (err.response?.status === 403) {
-                    setFetchError('You are not authorized to edit this post.');
-                } else {
-                    setFetchError('Failed to load post. Please try again.');
+                    msg = 'You are not authorized to edit this post.';
                 }
+                setFetchError(msg);
+                toast.error(msg);
             } finally {
                 setFetchLoading(false);
             }
@@ -58,13 +60,12 @@ const EditPost = () => {
         try {
             await api.put(`/posts/${id}`, { title, content, tags });
             setSuccess('Post updated successfully! Redirecting...');
+            toast.success('Post updated successfully!');
             setTimeout(() => navigate('/dashboard'), 1500);
         } catch (err) {
-            if (err.response?.status === 403) {
-                setError('You are not authorized to edit this post.');
-            } else {
-                setError(err.response?.data?.message || 'Failed to update post. Please try again.');
-            }
+            const msg = err.response?.data?.message || 'Failed to update post. Please try again.';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }

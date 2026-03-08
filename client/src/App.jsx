@@ -21,6 +21,10 @@ import CreatePost from './pages/CreatePost';
 import EditPost from './pages/EditPost';
 import NotFound from './pages/NotFound';
 
+// Toastify
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   return (
     <Router>
@@ -28,6 +32,7 @@ function App() {
       <AuthProvider>
         <div className="app-container" style={{ minHeight: '100vh', position: 'relative' }}>
           <Header />
+          <ToastContainer position="top-right" autoClose={3000} />
 
           <main>
             <Routes>
