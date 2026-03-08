@@ -29,6 +29,22 @@ const Dashboard = () => {
         }
     }, []);
 
+    const handleDelete = async (postId) => {
+        if (!window.confirm('Are you sure you want to delete this post?')) return;
+
+        // Optimistic UI update: remove post from state immediately
+        const previousPosts = [...posts];
+        setPosts(posts.filter(p => p._id !== postId));
+
+        try {
+            await api.delete(`/posts/${postId}`);
+        } catch (err) {
+            // Rollback on error
+            setPosts(previousPosts);
+            alert(err.response?.data?.message || 'Failed to delete post');
+        }
+    };
+
     useEffect(() => {
         if (!authLoading && user) {
             fetchPosts(page);
@@ -98,6 +114,15 @@ const Dashboard = () => {
                                             year: 'numeric', month: 'short', day: 'numeric'
                                         })}
                                     </span>
+                                </div>
+                                <div style={styles.postActions}>
+                                    <Link to={`/edit-post/${post._id}`} style={styles.editBtn}>✏️ Edit</Link>
+                                    <button
+                                        onClick={() => handleDelete(post._id)}
+                                        style={styles.deleteBtn}
+                                    >
+                                        🗑️ Delete
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -204,9 +229,36 @@ const styles = {
         padding: '0.6rem 1.2rem', borderRadius: '6px',
         border: '1px solid #ccc', background: '#fff',
         cursor: 'pointer', fontSize: '0.9rem',
-        ':disabled': { opacity: 0.4, cursor: 'not-allowed' },
     },
     pageInfo: { color: '#555', fontSize: '0.9rem' },
+    postActions: {
+        display: 'flex',
+        gap: '0.75rem',
+        marginTop: '1.25rem',
+        paddingTop: '1rem',
+        borderTop: '1px solid #f5f5f5'
+    },
+    editBtn: {
+        textDecoration: 'none',
+        color: '#007bff',
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        padding: '0.4rem 0.8rem',
+        borderRadius: '5px',
+        border: '1px solid #007bff',
+        transition: 'all 0.2s',
+    },
+    deleteBtn: {
+        background: 'none',
+        border: '1px solid #dc3545',
+        color: '#dc3545',
+        cursor: 'pointer',
+        fontSize: '0.9rem',
+        fontWeight: '600',
+        padding: '0.4rem 0.8rem',
+        borderRadius: '5px',
+        transition: 'all 0.2s',
+    },
 };
 
 export default Dashboard;
