@@ -18,6 +18,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CreatePost from './pages/CreatePost';
+import EditPost from './pages/EditPost';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -47,6 +48,9 @@ function App() {
               } />
               <Route path="/create-post" element={
                 <ProtectedRoute><CreatePost /></ProtectedRoute>
+              } />
+              <Route path="/edit-post/:id" element={
+                <ProtectedRoute><EditPost /></ProtectedRoute>
               } />
 
               <Route path="*" element={<NotFound />} />
