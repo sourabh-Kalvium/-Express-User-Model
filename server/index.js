@@ -7,7 +7,18 @@ const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const errorMiddleware = require('./middleware/errorMiddleware');
 
+const http = require('http');
+const { Server } = require('socket.io');
+
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: process.env.CLIENT_URL || 'http://localhost:5173',
+        methods: ['GET', 'POST']
+    }
+});
+
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
@@ -24,6 +35,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Socket.io Connection Logic
+io.on('connection', (socket) => {
+    console.log(`A user connected: ${socket.id}`);
+
+    socket.on('disconnect', () => {
+        console.log(`User disconnected: ${socket.id}`);
+    });
+});
+
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
@@ -37,7 +57,7 @@ app.get('/api/test', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`CORS is allowing requests from: ${corsOptions.origin}`);
 });

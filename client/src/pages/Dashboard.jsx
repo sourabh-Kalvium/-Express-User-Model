@@ -3,9 +3,37 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { socket } from '../services/socket';
 
 const Dashboard = () => {
     const { user, loading: authLoading, logout } = useAuth();
+
+    // Socket.io Connection Logic
+    useEffect(() => {
+        // Connect the socket
+        socket.connect();
+
+        // Socket Event Listeners
+        socket.on('connect', () => {
+            console.log('Connected with socket ID:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('Socket connection error:', error);
+        });
+
+        // Cleanup on unmount
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+            socket.off('connect_error');
+            socket.disconnect();
+        };
+    }, []);
 
     // Posts state
     const [posts, setPosts] = useState([]);
