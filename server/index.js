@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 const errorMiddleware = require('./middleware/errorMiddleware');
 
 const http = require('http');
@@ -65,6 +66,7 @@ io.on('connection', (socket) => {
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes(io));
+app.use('/api/upload', uploadRoutes);
 
 // Error Middleware
 app.use(errorMiddleware);
