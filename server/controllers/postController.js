@@ -5,7 +5,7 @@ const Post = require('../models/Post');
 // @access  Protected
 const createPost = async (req, res, next, io) => {
     try {
-        const { title, content, tags } = req.body;
+        const { title, content, tags, coverImage } = req.body;
 
         if (!title || !content) {
             return res.status(400).json({ success: false, message: 'Title and content are required' });
@@ -16,6 +16,7 @@ const createPost = async (req, res, next, io) => {
             content,
             tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
             author: req.user._id, // from protect middleware
+            coverImage: coverImage || null,
         });
 
         // Emit a newPost event using io.emit() after saving a post

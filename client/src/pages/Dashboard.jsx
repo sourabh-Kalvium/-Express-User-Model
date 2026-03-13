@@ -146,6 +146,15 @@ const Dashboard = () => {
                     <div style={styles.postList}>
                         {posts.map(post => (
                             <div key={post._id} style={styles.postCard}>
+                                {post.coverImage && (
+                                    <div style={styles.coverImageContainer}>
+                                        <img 
+                                            src={post.coverImage} 
+                                            alt={`Cover for ${post.title}`} 
+                                            style={styles.coverImage} 
+                                        />
+                                    </div>
+                                )}
                                 <h3 style={styles.postTitle}>{post.title}</h3>
                                 <p style={styles.postContent}>
                                     {post.content.length > 180
@@ -259,6 +268,19 @@ const styles = {
         border: '1px solid #eee', borderRadius: '10px',
         padding: '1.25rem 1.5rem', background: '#fff',
         boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+    },
+    coverImageContainer: {
+        width: '100%',
+        height: '200px',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        marginBottom: '1rem',
+        background: '#eee',
+    },
+    coverImage: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
     },
     postTitle: { margin: '0 0 0.5rem', color: '#222', fontSize: '1.1rem' },
     postContent: { margin: '0 0 0.75rem', color: '#555', lineHeight: '1.6', fontSize: '0.95rem' },
