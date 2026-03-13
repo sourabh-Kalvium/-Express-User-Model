@@ -1,33 +1,16 @@
-const Post = require('../models/Post');
+const postsService = require('../services/posts.service');
 
 // @desc    Create a new post
 // @route   POST /api/posts
 // @access  Protected
 const createPost = async (req, res, next, io) => {
     try {
-        const { title, content, tags } = req.body;
-
-        if (!title || !content) {
-            return res.status(400).json({ success: false, message: 'Title and content are required' });
-        }
-
-        const post = await Post.create({
-            title,
-            content,
-            tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-            author: req.user._id, // from protect middleware
-        });
-
-        // Emit a newPost event using io.emit() after saving a post
-        if (io) {
-            // Populate author before emitting so frontend has all details
-            const populatedPost = await post.populate('author', 'name email');
-            io.emit('newPost', populatedPost);
-        }
-
+        const post = await postsService.createPost(req.body, req.user._id);
         res.status(201).json({ success: true, data: post });
-
     } catch (error) {
+        if (error.message === 'Title and content are required') {
+            return res.status(400).json({ success: false, message: error.message });
+        }
         next(error);
     }
 };
@@ -39,29 +22,13 @@ const getPosts = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
-        const skip = (page - 1) * limit;
 
-        // Count only this user's posts
-        const total = await Post.countDocuments({ author: req.user._id });
-        const totalPages = Math.ceil(total / limit);
-
-        const posts = await Post.find({ author: req.user._id })
-            .sort({ createdAt: -1 }) // newest first
-            .skip(skip)
-            .limit(limit)
-            .populate('author', 'name email');
+        const result = await postsService.getPosts(req.user._id, page, limit);
 
         res.status(200).json({
             success: true,
-            data: posts,
-            pagination: {
-                total,
-                totalPages,
-                currentPage: page,
-                limit,
-                hasNextPage: page < totalPages,
-                hasPrevPage: page > 1,
-            },
+            data: result.posts,
+            pagination: result.pagination,
         });
 
     } catch (error) {
@@ -74,15 +41,12 @@ const getPosts = async (req, res, next) => {
 // @access  Protected
 const getPostById = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id).populate('author', 'name email');
-
-        if (!post) {
-            return res.status(404).json({ success: false, message: 'Post not found' });
-        }
-
+        const post = await postsService.getPostById(req.params.id);
         res.status(200).json({ success: true, data: post });
-
     } catch (error) {
+        if (error.message === 'Post not found') {
+            return res.status(404).json({ success: false, message: error.message });
+        }
         next(error);
     }
 };
@@ -92,32 +56,18 @@ const getPostById = async (req, res, next) => {
 // @access  Protected (owner only)
 const updatePost = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id);
-
-        if (!post) {
-            return res.status(404).json({ success: false, message: 'Post not found' });
-        }
-
-        // Ownership check — only the author can update
-        if (post.author.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ success: false, message: 'Not authorized to update this post' });
-        }
-
-        const { title, content, tags } = req.body;
-
-        if (!title || !content) {
-            return res.status(400).json({ success: false, message: 'Title and content are required' });
-        }
-
-        post.title = title.trim();
-        post.content = content.trim();
-        post.tags = tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [];
-
-        const updatedPost = await post.save();
-
+        const updatedPost = await postsService.updatePost(req.params.id, req.user._id, req.body);
         res.status(200).json({ success: true, data: updatedPost });
-
     } catch (error) {
+        if (error.message === 'Post not found') {
+            return res.status(404).json({ success: false, message: error.message });
+        }
+        if (error.statusCode === 403) {
+            return res.status(403).json({ success: false, message: error.message });
+        }
+        if (error.message === 'Title and content are required') {
+            return res.status(400).json({ success: false, message: error.message });
+        }
         next(error);
     }
 };
@@ -127,22 +77,15 @@ const updatePost = async (req, res, next) => {
 // @access  Protected (owner only)
 const deletePost = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id);
-
-        if (!post) {
-            return res.status(404).json({ success: false, message: 'Post not found' });
-        }
-
-        // Ownership check — only the author can delete
-        if (post.author.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ success: false, message: 'Not authorized to delete this post' });
-        }
-
-        await post.deleteOne();
-
+        await postsService.deletePost(req.params.id, req.user._id);
         res.status(200).json({ success: true, message: 'Post deleted successfully' });
-
     } catch (error) {
+        if (error.message === 'Post not found') {
+            return res.status(404).json({ success: false, message: error.message });
+        }
+        if (error.statusCode === 403) {
+            return res.status(403).json({ success: false, message: error.message });
+        }
         next(error);
     }
 };
