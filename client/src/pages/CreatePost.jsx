@@ -1,6 +1,8 @@
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
+import ImageUpload from '../components/ImageUpload';
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -10,6 +12,12 @@ const CreatePost = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    const handleUpload = (formData) => {
+        const file = formData.get('image');
+        console.log('Final Image for Upload:', file);
+        toast.info(`File selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -84,6 +92,11 @@ const CreatePost = () => {
                             placeholder="e.g. React, JavaScript, Node.js"
                             style={styles.input}
                         />
+                    </div>
+
+                    {/* Image Upload Component */}
+                    <div style={styles.formGroup}>
+                        <ImageUpload onUpload={handleUpload} />
                     </div>
 
                     <div style={styles.btnRow}>
