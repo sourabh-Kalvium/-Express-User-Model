@@ -1,15 +1,20 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast as toastifyToast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { socket } from '../services/socket';
 
 const Dashboard = () => {
-    const { user, loading: authLoading, logout } = useAuth();
+    const { user, loading: authLoading, logout, token } = useAuth();
 
     // Socket.io Connection Logic
     useEffect(() => {
+        if (!token) return; // wait for token to be available
+
+        // Pass JWT inside the auth option
+        socket.auth = { token };
         // Connect the socket
         socket.connect();
 
@@ -26,14 +31,25 @@ const Dashboard = () => {
             console.error('Socket connection error:', error);
         });
 
+        // Listen for new posts
+        socket.on('newPost', (post) => {
+            // Check if the author is the current user. If so, don't show toast (optional but good practice)
+            // But we can also just show it for everyone to fulfill requirements.
+            toast.success(`New post created: ${post.title} by ${post.author?.name || 'Unknown'}`, {
+                duration: 4000,
+                position: 'top-right',
+            });
+        });
+
         // Cleanup on unmount
         return () => {
             socket.off('connect');
             socket.off('disconnect');
             socket.off('connect_error');
+            socket.off('newPost');
             socket.disconnect();
         };
-    }, []);
+    }, [token]);
 
     // Posts state
     const [posts, setPosts] = useState([]);
@@ -54,7 +70,7 @@ const Dashboard = () => {
         } catch (err) {
             const msg = err.response?.data?.message || 'Failed to load posts';
             setPostsError(msg);
-            toast.error(msg);
+            toastifyToast.error(msg);
         } finally {
             setPostsLoading(false);
         }
@@ -69,12 +85,12 @@ const Dashboard = () => {
 
         try {
             await api.delete(`/posts/${postId}`);
-            toast.success('Post deleted successfully');
+            toastifyToast.success('Post deleted successfully');
         } catch (err) {
             // Rollback on error
             setPosts(previousPosts);
             const msg = err.response?.data?.message || 'Failed to delete post';
-            toast.error(msg);
+            toastifyToast.error(msg);
         }
     };
 

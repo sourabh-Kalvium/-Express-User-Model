@@ -3,7 +3,7 @@ const postsService = require('../services/posts.service');
 // @desc    Create a new post
 // @route   POST /api/posts
 // @access  Protected
-const createPost = async (req, res, next) => {
+const createPost = async (req, res, next, io) => {
     try {
         const post = await postsService.createPost(req.body, req.user._id);
         res.status(201).json({ success: true, data: post });
