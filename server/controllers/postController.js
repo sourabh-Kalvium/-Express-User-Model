@@ -3,7 +3,7 @@ const Post = require('../models/Post');
 // @desc    Create a new post
 // @route   POST /api/posts
 // @access  Protected
-const createPost = async (req, res, next) => {
+const createPost = async (req, res, next, io) => {
     try {
         const { title, content, tags } = req.body;
 
@@ -17,6 +17,13 @@ const createPost = async (req, res, next) => {
             tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
             author: req.user._id, // from protect middleware
         });
+
+        // Emit a newPost event using io.emit() after saving a post
+        if (io) {
+            // Populate author before emitting so frontend has all details
+            const populatedPost = await post.populate('author', 'name email');
+            io.emit('newPost', populatedPost);
+        }
 
         res.status(201).json({ success: true, data: post });
 

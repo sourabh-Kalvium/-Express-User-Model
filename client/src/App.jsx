@@ -21,9 +21,10 @@ import CreatePost from './pages/CreatePost';
 import EditPost from './pages/EditPost';
 import NotFound from './pages/NotFound';
 
-// Toastify
+// Toastify & Hot Toast
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <div className="app-container" style={{ minHeight: '100vh', position: 'relative' }}>
           <Header />
           <ToastContainer position="top-right" autoClose={3000} />
+          <Toaster />
 
           <main>
             <Routes>

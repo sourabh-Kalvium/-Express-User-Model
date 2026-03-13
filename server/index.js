@@ -35,9 +35,27 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Socket.io Authentication Middleware
+const jwt = require('jsonwebtoken');
+
+io.use((socket, next) => {
+    try {
+        const token = socket.handshake.auth.token;
+        if (!token) {
+            return next(new Error('Authentication error'));
+        }
+        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        socket.user = decoded; // attaching decoded user to socket
+        next();
+    } catch (err) {
+        next(new Error('Authentication error'));
+    }
+});
+
 // Socket.io Connection Logic
 io.on('connection', (socket) => {
-    console.log(`A user connected: ${socket.id}`);
+    console.log(`A user connected: ${socket.id}, Email: ${socket.user?.email || 'Unknown'}`);
 
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
@@ -46,7 +64,7 @@ io.on('connection', (socket) => {
 
 // Routes
 app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
+app.use('/api/posts', postRoutes(io));
 
 // Error Middleware
 app.use(errorMiddleware);
