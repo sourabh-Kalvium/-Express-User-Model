@@ -12,11 +12,26 @@ const CreatePost = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [coverImageUrl, setCoverImageUrl] = useState(null);
+    const [imageUploading, setImageUploading] = useState(false);
 
-    const handleUpload = (formData) => {
-        const file = formData.get('image');
-        console.log('Final Image for Upload:', file);
-        toast.info(`File selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+    const handleUpload = async (formData) => {
+        setImageUploading(true);
+        setError('');
+        try {
+            const res = await api.post('/upload', formData);
+            if (res.data.success) {
+                setCoverImageUrl(res.data.url);
+                toast.success('Image uploaded successfully!');
+                console.log('Cloudinary URL:', res.data.url);
+            }
+        } catch (err) {
+            const msg = err.response?.data?.message || 'Failed to upload image';
+            setError(msg);
+            toast.error(msg);
+        } finally {
+            setImageUploading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -32,7 +47,12 @@ const CreatePost = () => {
         setLoading(true);
         try {
             // api.js interceptor automatically attaches Authorization header
-            await api.post('/posts', { title, content, tags });
+            await api.post('/posts', { 
+                title, 
+                content, 
+                tags,
+                coverImage: coverImageUrl 
+            });
 
             setSuccess('Post created successfully! Redirecting to dashboard...');
             toast.success('Post created successfully!');
