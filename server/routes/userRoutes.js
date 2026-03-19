@@ -13,6 +13,11 @@ router.delete('/:id', userController.deleteUser);
 // @access  Public
 router.post('/login', loginUser);
 
+// @route   POST /api/users/logout
+// @desc    Logout user
+// @access  Protected - requires valid JWT
+router.post('/logout', protect, logoutUser);
+
 // @route   GET /api/users/me
 // @desc    Get the currently authenticated user's profile
 // @access  Protected — requires valid JWT
