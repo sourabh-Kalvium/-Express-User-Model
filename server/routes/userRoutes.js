@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, logoutUser } = require('../controllers/userController');
-const { protect } = require('../middleware/authMiddleware');
+const userController = require('../controllers/userController');
 
-// @route   POST /api/users/register
-// @desc    Register a new user
-// @access  Public
-router.post('/register', registerUser);
+router.post('/register', userController.registerUser);
+router.get('/', userController.getAllUsers);
+router.get('/:id', userController.getUserById);
+router.put('/:id', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
 
 // @route   POST /api/users/login
 // @desc    Login user / Return JWT Token
