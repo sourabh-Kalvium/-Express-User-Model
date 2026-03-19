@@ -100,7 +100,7 @@ const updatePost = async (req, res, next) => {
         }
 
         // Ownership check — only the author can update
-        if (post.author.toString() !== req.user._id.toString()) {
+        if (post.author.toString() !== req.user.id) {
             return res.status(403).json({ success: false, message: 'Not authorized to update this post' });
         }
 
@@ -135,7 +135,7 @@ const deletePost = async (req, res, next) => {
         }
 
         // Ownership check — only the author can delete
-        if (post.author.toString() !== req.user._id.toString()) {
+        if (post.author.toString() !== req.user.id) {
             return res.status(403).json({ success: false, message: 'Not authorized to delete this post' });
         }
 

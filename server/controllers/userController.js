@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const registerUser = async (req, res, next) => {
     try {
@@ -95,10 +95,17 @@ const loginUser = async (req, res, next) => {
         // 4. Generate JWT token
         const token = generateToken(user._id);
 
+        // 5. Send cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict', // recommended for CSRF protection
+            maxAge: 3600000 // 1 hour
+        });
+
         res.status(200).json({
             success: true,
             message: 'User logged in successfully',
-            token,
             data: {
                 _id: user.id,
                 name: user.name,
@@ -111,7 +118,16 @@ const loginUser = async (req, res, next) => {
     }
 };
 
+const logoutUser = async (req, res) => {
+    res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(0)
+    });
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+};
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 };
