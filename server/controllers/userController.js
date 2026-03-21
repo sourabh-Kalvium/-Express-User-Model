@@ -1,5 +1,13 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+// Generate JWT token helper
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN || '30d',
+    });
+};
 
 const registerUser = async (req, res, next) => {
     try {
@@ -33,10 +41,14 @@ const registerUser = async (req, res, next) => {
             password: hashedPassword
         });
 
-        // 5. Send success response (but never send back the password!)
+        // Generate JWT token
+        const token = generateToken(user._id);
+
+        // Send success response (but never send back the password!)
         res.status(201).json({
             success: true,
             message: 'User registered successfully',
+            token: token,
             data: {
                 _id: user.id,
                 name: user.name,
@@ -51,14 +63,6 @@ const registerUser = async (req, res, next) => {
 };
 
 // JWT Authentication addition
-const jwt = require('jsonwebtoken');
-
-// Generate JWT token helper
-const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN || '30d',
-    });
-};
 
 const loginUser = async (req, res, next) => {
     try {
@@ -106,6 +110,7 @@ const loginUser = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: 'User logged in successfully',
+            token: token,
             data: {
                 _id: user.id,
                 name: user.name,
