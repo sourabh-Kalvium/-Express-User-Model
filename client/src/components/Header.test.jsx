@@ -30,7 +30,7 @@ describe('Header Component', () => {
     );
 
     // Use getByRole and getByText as required
-    expect(screen.getByText(/TechBlog/i)).toBeInTheDocument();
+    expect(screen.getByText(/WrongLogo/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Home/i })).toBeInTheDocument();
   });
 
