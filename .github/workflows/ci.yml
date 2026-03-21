@@ -1,0 +1,52 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+
+      - name: Install Server Dependencies
+        run: npm ci
+        working-directory: ./server
+
+      - name: Run Server Tests
+        run: npm test
+        working-directory: ./server
+        env:
+          MONGODB_URI_TEST: mongodb://localhost:27017/blogify_test
+          NODE_ENV: test
+          JWT_SECRET: test_secret
+
+      - name: Install Client Dependencies
+        run: npm ci
+        working-directory: ./client
+
+      - name: Run Client Tests
+        run: npm test
+        working-directory: ./client
