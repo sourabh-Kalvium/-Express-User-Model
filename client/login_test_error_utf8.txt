@@ -1,0 +1,511 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.1.0 [39m[90mC:/Users/HP/Desktop/assinmets/express/client[39m
+
+ [31mΓ¥»[39m src/pages/Login.test.jsx [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 423[2mms[22m[39m
+[31m     [31m├ù[31m should update input values when typing[39m[32m 135[2mms[22m[39m
+[31m     [31m├ù[31m should call the submission handler with correct data on valid submit[39m[32m 21[2mms[22m[39m
+     [32mΓ£ô[39m should show an error message and not call the handler when fields are empty[32m 262[2mms[22m[39m
+node.exe : 
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (:String) [],    
+ RemoteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»[39m[1m[41m 
+Failed Tests 2 [49m[2
+2m[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»Γ
+Ä»ΓÄ»[39m
+
+[41m[1m FAIL 
+[22m[49m src/pages/Lo
+gin.test.jsx[2m > 
+[22mLogin Interaction 
+Tests[2m > 
+[22mshould update 
+input values when 
+typing
+[31m[1mTestingLibrary
+ElementError[22m: 
+Found a label with the 
+text of: /Email/i, 
+however no form 
+control was found 
+associated to that 
+label. Make sure 
+you're using the "for" 
+attribute or 
+"aria-labelledby" 
+attribute correctly.
+
+Ignored nodes: 
+comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mstyle[31m=
+[32m"display: flex; 
+justify-content: 
+center; align-items: 
+center; min-height: 
+80vh; padding-bottom: 
+80px;"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mstyle[31m
+=[32m"border: 1px 
+solid rgb(221, 221, 
+221); border-radius: 
+8px; padding: 2rem; 
+width: 100%; 
+max-width: 400px; 
+box-shadow: 0 4px 10px 
+rgba(0,0,0,0.1);"[31m
+      [36m>[31m
+        [36m<h2>[31m
+          [0mLogin to 
+TechBlog[0m
+        [36m</h2>[31m
+        [36m<form[31m
+          [33mstyle[3
+1m=[32m"display: 
+flex; flex-direction: 
+column; gap: 1.5rem; 
+margin-top: 
+1.5rem;"[31m
+        [36m>[31m
+          
+[36m<div[31m
+            [33mstyle
+[31m=[32m"display: 
+flex; flex-direction: 
+column; gap: 
+0.5rem;"[31m
+          [36m>[31m
+            
+[36m<label[31m
+              [33mstyl
+e[31m=[32m"font-weigh
+t: bold;"[31m
+            [36m>[31m
+              
+[0mEmail[0m
+            
+[36m</label>[31m
+            
+[36m<input[31m
+              [33mplac
+eholder[31m=[32m"Ente
+r your email"[31m
+              [33mstyl
+e[31m=[32m"padding: 
+0.75rem; 
+border-radius: 4px; 
+border: 1px solid 
+rgb(204, 204, 204); 
+font-size: 1rem;"[31m
+              [33mtype
+[31m=[32m"email"[31m
+              [33mvalu
+e[31m=[32m""[31m
+            
+[36m/>[31m
+          
+[36m</div>[31m
+          
+[36m<div[31m
+            [33mstyle
+[31m=[32m"display: 
+flex; flex-direction: 
+column; gap: 
+0.5rem;"[31m
+          [36m>[31m
+            
+[36m<label[31m
+              [33mstyl
+e[31m=[32m"font-weigh
+t: bold;"[31m
+            [36m>[31m
+              
+[0mPassword[0m
+            
+[36m</label>[31m
+            
+[36m<input[31m
+              [33mplac
+eholder[31m=[32m"Ente
+r your password"[31m
+              [33mstyl
+e[31m=[32m"padding: 
+0.75rem; 
+border-radius: 4px; 
+border: 1px solid 
+rgb(204, 204, 204); 
+font-size: 1rem;"[31m
+              [33mtype
+[31m=[32m"password"[
+31m
+              [33mvalu
+e[31m=[32m""[31m
+            
+[36m/>[31m
+          
+[36m</div>[31m
+          
+[36m<button[31m
+            [33mstyle
+[31m=[32m"padding: 
+0.75rem; 
+background-color: 
+rgb(0, 123, 255); 
+color: white; border: 
+medium; border-radius: 
+4px; font-size: 1rem; 
+cursor: pointer; 
+font-weight: 
+bold;"[31m
+            [33mtype[
+31m=[32m"submit"[31m
+          [36m>[31m
+            
+[0mLogin[0m
+          
+[36m</button>[31m
+        
+[36m</form>[31m
+        [36m<p[31m
+          [33mstyle[3
+1m=[32m"margin-top: 
+1.5rem; text-align: 
+center; font-size: 
+0.9rem;"[31m
+        [36m>[31m
+          [0mDon't 
+have an account? [0m
+          [36m<a[31m
+            [33mdata-d
+iscover[31m=[32m"true
+"[31m
+            [33mhref[
+31m=[32m"/register"[3
+1m
+          [36m>[31m
+            
+[0mRegister here[0m
+          
+[36m</a>[31m
+        [36m</p>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2mΓ¥»[22m 
+Object.getElementError 
+node_modules/@testing-l
+ibrary/dom/dist/config.
+js:[2m37:19[22m[39m
+[90m [2mΓ¥»[22m 
+getAllByLabelText node_
+modules/@testing-librar
+y/dom/dist/queries/labe
+l-text.js:[2m108:40[2
+2m[39m
+[90m [2mΓ¥»[22m node
+_modules/@testing-libra
+ry/dom/dist/query-helpe
+rs.js:[2m52:17[22m[3
+9m
+[90m [2mΓ¥»[22m node
+_modules/@testing-libra
+ry/dom/dist/query-helpe
+rs.js:[2m95:19[22m[3
+9m
+[36m [2mΓ¥»[22m src/
+pages/Login.test.jsx:[
+2m45:35[22m[39m
+    [90m 43|[39m     
+    )[33m;[39m
+    [90m 44|[39m
+    [90m 45|[39m     
+    [35mconst[39m 
+emailInput [33m=[39m 
+screen[33m.[39m[34mg
+etByLabelText[39m([36
+m/Email/i[39m)[33m;[
+39m
+    [90m   |[39m     
+                       
+       [31m^[39m
+    [90m 46|[39m     
+    [35mconst[39m 
+passwordInput 
+[33m=[39m screen[33m
+.[39m[34mgetByLabelTe
+xt[39m([36m/Password/
+i[39m)[33m;[39m
+    [90m 47|[39m
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ
+»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»Γ
+Ä»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/2]ΓÄ»[2
+2m[39m
+
+[41m[1m FAIL 
+[22m[49m src/pages/Lo
+gin.test.jsx[2m > 
+[22mLogin Interaction 
+Tests[2m > 
+[22mshould call the 
+submission handler 
+with correct data on 
+valid submit
+[31m[1mTestingLibrary
+ElementError[22m: 
+Found a label with the 
+text of: /Email/i, 
+however no form 
+control was found 
+associated to that 
+label. Make sure 
+you're using the "for" 
+attribute or 
+"aria-labelledby" 
+attribute correctly.
+
+Ignored nodes: 
+comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mstyle[31m=
+[32m"display: flex; 
+justify-content: 
+center; align-items: 
+center; min-height: 
+80vh; padding-bottom: 
+80px;"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mstyle[31m
+=[32m"border: 1px 
+solid rgb(221, 221, 
+221); border-radius: 
+8px; padding: 2rem; 
+width: 100%; 
+max-width: 400px; 
+box-shadow: 0 4px 10px 
+rgba(0,0,0,0.1);"[31m
+      [36m>[31m
+        [36m<h2>[31m
+          [0mLogin to 
+TechBlog[0m
+        [36m</h2>[31m
+        [36m<form[31m
+          [33mstyle[3
+1m=[32m"display: 
+flex; flex-direction: 
+column; gap: 1.5rem; 
+margin-top: 
+1.5rem;"[31m
+        [36m>[31m
+          
+[36m<div[31m
+            [33mstyle
+[31m=[32m"display: 
+flex; flex-direction: 
+column; gap: 
+0.5rem;"[31m
+          [36m>[31m
+            
+[36m<label[31m
+              [33mstyl
+e[31m=[32m"font-weigh
+t: bold;"[31m
+            [36m>[31m
+              
+[0mEmail[0m
+            
+[36m</label>[31m
+            
+[36m<input[31m
+              [33mplac
+eholder[31m=[32m"Ente
+r your email"[31m
+              [33mstyl
+e[31m=[32m"padding: 
+0.75rem; 
+border-radius: 4px; 
+border: 1px solid 
+rgb(204, 204, 204); 
+font-size: 1rem;"[31m
+              [33mtype
+[31m=[32m"email"[31m
+              [33mvalu
+e[31m=[32m""[31m
+            
+[36m/>[31m
+          
+[36m</div>[31m
+          
+[36m<div[31m
+            [33mstyle
+[31m=[32m"display: 
+flex; flex-direction: 
+column; gap: 
+0.5rem;"[31m
+          [36m>[31m
+            
+[36m<label[31m
+              [33mstyl
+e[31m=[32m"font-weigh
+t: bold;"[31m
+            [36m>[31m
+              
+[0mPassword[0m
+            
+[36m</label>[31m
+            
+[36m<input[31m
+              [33mplac
+eholder[31m=[32m"Ente
+r your password"[31m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 23:09:39
+[2m   Duration [22m 3.80s[2m (transform 129ms, setup 226ms, import 476ms, tests 423ms, environment 2.31s)[22m
+
+              [33mstyl
+e[31m=[32m"padding: 
+0.75rem; 
+border-radius: 4px; 
+border: 1px solid 
+rgb(204, 204, 204); 
+font-size: 1rem;"[31m
+              [33mtype
+[31m=[32m"password"[
+31m
+              [33mvalu
+e[31m=[32m""[31m
+            
+[36m/>[31m
+          
+[36m</div>[31m
+          
+[36m<button[31m
+            [33mstyle
+[31m=[32m"padding: 
+0.75rem; 
+background-color: 
+rgb(0, 123, 255); 
+color: white; border: 
+medium; border-radius: 
+4px; font-size: 1rem; 
+cursor: pointer; 
+font-weight: 
+bold;"[31m
+            [33mtype[
+31m=[32m"submit"[31m
+          [36m>[31m
+            
+[0mLogin[0m
+          
+[36m</button>[31m
+        
+[36m</form>[31m
+        [36m<p[31m
+          [33mstyle[3
+1m=[32m"margin-top: 
+1.5rem; text-align: 
+center; font-size: 
+0.9rem;"[31m
+        [36m>[31m
+          [0mDon't 
+have an account? [0m
+          [36m<a[31m
+            [33mdata-d
+iscover[31m=[32m"true
+"[31m
+            [33mhref[
+31m=[32m"/register"[3
+1m
+          [36m>[31m
+            
+[0mRegister here[0m
+          
+[36m</a>[31m
+        [36m</p>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2mΓ¥»[22m 
+Object.getElementError 
+node_modules/@testing-l
+ibrary/dom/dist/config.
+js:[2m37:19[22m[39m
+[90m [2mΓ¥»[22m 
+getAllByLabelText node_
+modules/@testing-librar
+y/dom/dist/queries/labe
+l-text.js:[2m108:40[2
+2m[39m
+[90m [2mΓ¥»[22m node
+_modules/@testing-libra
+ry/dom/dist/query-helpe
+rs.js:[2m52:17[22m[3
+9m
+[90m [2mΓ¥»[22m node
+_modules/@testing-libra
+ry/dom/dist/query-helpe
+rs.js:[2m95:19[22m[3
+9m
+[36m [2mΓ¥»[22m src/
+pages/Login.test.jsx:[
+2m74:35[22m[39m
+    [90m 72|[39m     
+    )[33m;[39m
+    [90m 73|[39m
+    [90m 74|[39m     
+    [35mconst[39m 
+emailInput [33m=[39m 
+screen[33m.[39m[34mg
+etByLabelText[39m([36
+m/Email/i[39m)[33m;[
+39m
+    [90m   |[39m     
+                       
+       [31m^[39m
+    [90m 75|[39m     
+    [35mconst[39m 
+passwordInput 
+[33m=[39m screen[33m
+.[39m[34mgetByLabelTe
+xt[39m([36m/Password/
+i[39m)[33m;[39m
+    [90m 76|[39m     
+    const submitButton 
+= screen.getByRole('but
+ton', { name: /LoginΓÇª
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ
+»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»Γ
+Ä»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/2]ΓÄ»[2
+2m[39m
+
+

@@ -48,12 +48,13 @@ const Login = () => {
             <div style={styles.card}>
                 <h2>Login to TechBlog</h2>
 
-                {error && <div style={styles.errorAlert}>{error}</div>}
+                {error && <div style={styles.errorAlert} role="alert">{error}</div>}
 
                 <form style={styles.form} onSubmit={handleLogin}>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Email</label>
+                        <label htmlFor="email" style={styles.label}>Email</label>
                         <input
+                            id="email"
                             type="email"
                             placeholder="Enter your email"
                             style={styles.input}
@@ -62,8 +63,9 @@ const Login = () => {
                         />
                     </div>
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Password</label>
+                        <label htmlFor="password" style={styles.label}>Password</label>
                         <input
+                            id="password"
                             type="password"
                             placeholder="Enter your password"
                             style={styles.input}
