@@ -2,7 +2,7 @@ const Post = require('../models/Post');
 
 // Create a new post
 const createPost = async (postData, authorId) => {
-    const { title, content, tags } = postData;
+    const { title, content, tags, coverImage } = postData;
 
     if (!title || !content) {
         throw new Error('Title and content are required');
@@ -13,6 +13,7 @@ const createPost = async (postData, authorId) => {
         content,
         tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
         author: authorId,
+        coverImage: coverImage || null,
     });
 
     return post;
@@ -68,7 +69,7 @@ const updatePost = async (postId, authorId, updateData) => {
         throw error;
     }
 
-    const { title, content, tags } = updateData;
+    const { title, content, tags, coverImage } = updateData;
 
     if (!title || !content) {
         throw new Error('Title and content are required');
@@ -78,6 +79,9 @@ const updatePost = async (postId, authorId, updateData) => {
     post.content = content.trim();
     if (tags !== undefined) {
         post.tags = tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+    }
+    if (coverImage !== undefined) {
+        post.coverImage = coverImage;
     }
 
     const updatedPost = await post.save();

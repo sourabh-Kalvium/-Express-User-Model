@@ -24,6 +24,10 @@ const CreatePost = () => {
                 setCoverImageUrl(res.data.url);
                 toast.success('Image uploaded successfully!');
                 console.log('Cloudinary URL:', res.data.url);
+                
+                // TODO: Orphaned upload problem. If the user uploads multiple images 
+                // before submitting the post, previous uploads will remain on Cloudinary.
+                // Future improvement: Delete old image using public_id before setting new URL.
             }
         } catch (err) {
             const msg = err.response?.data?.message || 'Failed to upload image';
@@ -59,6 +63,7 @@ const CreatePost = () => {
             setTitle('');
             setContent('');
             setTags('');
+            setCoverImageUrl(null);
             setTimeout(() => navigate('/dashboard'), 1500);
 
         } catch (err) {
@@ -117,6 +122,8 @@ const CreatePost = () => {
                     {/* Image Upload Component */}
                     <div style={styles.formGroup}>
                         <ImageUpload onUpload={handleUpload} />
+                        {imageUploading && <p style={styles.loadingText}>⌛ Uploading image, please wait...</p>}
+                        {coverImageUrl && !imageUploading && <p style={styles.successText}>✅ Image ready for post!</p>}
                     </div>
 
                     <div style={styles.btnRow}>
@@ -127,7 +134,7 @@ const CreatePost = () => {
                         >
                             Cancel
                         </button>
-                        <button type="submit" style={styles.submitBtn} disabled={loading}>
+                        <button type="submit" style={styles.submitBtn} disabled={loading || imageUploading}>
                             {loading ? 'Publishing...' : 'Publish Post'}
                         </button>
                     </div>
@@ -194,6 +201,8 @@ const styles = {
         padding: '0.75rem 1rem', backgroundColor: '#d4edda',
         color: '#155724', borderRadius: '6px', border: '1px solid #c3e6cb',
     },
+    loadingText: { color: '#007bff', fontSize: '0.9rem', marginTop: '0.5rem', fontWeight: '500' },
+    successText: { color: '#28a745', fontSize: '0.9rem', marginTop: '0.5rem', fontWeight: '500' },
 };
 
 export default CreatePost;
